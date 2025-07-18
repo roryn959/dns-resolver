@@ -4,6 +4,9 @@
 #include <string>
 #include <iostream>
 
+constexpr uint8_t END_OF_LABEL = 0x00;
+constexpr uint8_t POINTER_TO_LABEL = 0xC0;
+
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = read_u16(buffer, offset);
@@ -31,19 +34,26 @@ uint32_t ResourceRecord::read_u32(const uint8_t* buffer, size_t& offset) {
     return result;
 }
 
-std::string ResourceRecord::parse_name(const uint8_t* buffer, size_t& offset) {
+std::string ResourceRecord::parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
     std::string name;
     while (true) {
-        const uint8_t label_length = buffer[offset++];
+        const uint8_t label_length = read_u8(buffer, offset);
 
-        if (label_length == 0x00) {
+        if (label_length == END_OF_LABEL) {
             if (name.back() == '.') {
                 name.pop_back();
             }
             return name;
         }
 
-        // Deal with pointers !!!
+        if (label_length >= POINTER_TO_LABEL) {
+            if (is_pointer) {
+                throw "Nested pointer detected";
+            }
+            size_t pointer_loc = (size_t) read_u8(buffer, offset);
+            name += parse_name(buffer, pointer_loc, true);
+            return name;
+        }
 
         for (int i=0; i<label_length; ++i) {
             name += (char) read_u8(buffer, offset);
@@ -62,7 +72,8 @@ std::vector<uint8_t> ResourceRecord::parse_data(const uint8_t* buffer, size_t& o
 }
 
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
-    out << "******************\nRR\n";
+    out << "******************\n";
+    out << "RR\n";
     out << rr.name_ << '\n';
     out << rr.type_ << '\n';
     out << rr.class_ << '\n';
@@ -82,16 +93,19 @@ std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
 
 int main() {
     uint8_t test_buffer[] = {
-        // NAME: www.example.com
-        0x03, 0x77, 0x77, 0x77,
+        // Offset 0x00: "example.com"
         0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
         0x03, 0x63, 0x6F, 0x6D,
         0x00,
 
-        // TYPE = A
+        // Offset 0x0D: "www" + pointer to "example.com" (0x00)
+        0x03, 0x77, 0x77, 0x77,
+        0xC0, 0x00,
+
+        // Offset 0x13: TYPE A
         0x00, 0x01,
 
-        // CLASS = IN
+        // CLASS IN
         0x00, 0x01,
 
         // TTL = 60
@@ -100,11 +114,13 @@ int main() {
         // RDLENGTH = 4
         0x00, 0x04,
 
-        // RDATA = 93.184.216.34
+        // RDATA: 93.184.216.34
         0x5D, 0xB8, 0xD8, 0x22
     };
 
-    size_t test_offset = 0;
+
+
+    size_t test_offset = 0x0D;
     ResourceRecord rr(test_buffer, test_offset);
 
     std::cout << rr;
