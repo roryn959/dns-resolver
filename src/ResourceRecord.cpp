@@ -2,77 +2,13 @@
 #include "ResourceRecord.h"
 #include "read_utils.h"
 
-constexpr uint8_t END_OF_LABEL = 0x00;
-constexpr uint8_t POINTER_TO_LABEL = 0xC0;
-
-enum class RR_Type {
-    A = 1,
-    NS,
-    MD,
-    MF,
-    CNAME,
-    SOA,
-    MB,
-    MG,
-    MR,
-    NULL_,
-    WKS,
-    PTR,
-    HINFO,
-    MINFO,
-    MX,
-    TXT
-};
-
-enum class RR_Class {
-    IN = 1,
-    CS,
-    CH,
-    HS
-};
-
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = read_u16(buffer, offset);
     class_ = read_u16(buffer, offset);
     ttl_ = read_u32(buffer, offset);
     rdlength_ = read_u16(buffer, offset);
-    rdata_ = parse_data(buffer, offset);
-}
-
-std::string ResourceRecord::parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
-    std::string name;
-    while (true) {
-        const uint8_t label_length = read_u8(buffer, offset);
-
-        if (label_length == END_OF_LABEL) {
-            if (name.back() == '.') name.pop_back();
-            return name;
-        }
-
-        if (label_length >= POINTER_TO_LABEL) {
-            if (is_pointer) {
-                throw "Nested pointer detected";
-            }
-            size_t pointer_loc = (size_t) read_u8(buffer, offset);
-            name += parse_name(buffer, pointer_loc, true);
-            return name;
-        }
-
-        for (int i=0; i<label_length; ++i) {
-            name += (char) read_u8(buffer, offset);
-        }
-        name += '.';
-
-    }
-}
-
-std::vector<uint8_t> ResourceRecord::parse_data(const uint8_t* buffer, size_t& offset) {
-    std::vector<uint8_t> data;
-    for (int i=0; i<rdlength_; ++i) {
-        data.push_back(read_u8(buffer, offset));
-    }
-    return data;
+    rdata_ = parse_data(buffer, offset, rdlength_);
 }
 
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
