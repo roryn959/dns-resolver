@@ -7,6 +7,25 @@
 constexpr uint8_t END_OF_LABEL = 0x00;
 constexpr uint8_t POINTER_TO_LABEL = 0xC0;
 
+enum class RR_Type {
+    A = 1,
+    NS,
+    MD,
+    MF,
+    CNAME,
+    SOA,
+    MB,
+    MG,
+    MR,
+    NULL_,
+    WKS,
+    PTR,
+    HINFO,
+    MINFO,
+    MX,
+    TXT
+};
+
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = read_u16(buffer, offset);
