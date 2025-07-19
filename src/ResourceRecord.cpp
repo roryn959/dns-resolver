@@ -1,8 +1,6 @@
 
 #include "ResourceRecord.h"
-
-#include <string>
-#include <iostream>
+#include "read_utils.h"
 
 constexpr uint8_t END_OF_LABEL = 0x00;
 constexpr uint8_t POINTER_TO_LABEL = 0xC0;
@@ -26,6 +24,13 @@ enum class RR_Type {
     TXT
 };
 
+enum class RR_Class {
+    IN = 1,
+    CS,
+    CH,
+    HS
+};
+
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = read_u16(buffer, offset);
@@ -35,33 +40,13 @@ ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     rdata_ = parse_data(buffer, offset);
 }
 
-uint8_t ResourceRecord::read_u8(const uint8_t* buffer, size_t& offset) {
-    return buffer[offset++];
-}
-
-uint16_t ResourceRecord::read_u16(const uint8_t* buffer, size_t& offset) {
-    uint16_t result = read_u8(buffer, offset);
-    result <<= 8;
-    result |= read_u8(buffer, offset);
-    return result;
-}
-
-uint32_t ResourceRecord::read_u32(const uint8_t* buffer, size_t& offset) {
-    uint32_t result = read_u16(buffer, offset);
-    result <<= 16;
-    result |= read_u16(buffer, offset);
-    return result;
-}
-
 std::string ResourceRecord::parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
     std::string name;
     while (true) {
         const uint8_t label_length = read_u8(buffer, offset);
 
         if (label_length == END_OF_LABEL) {
-            if (name.back() == '.') {
-                name.pop_back();
-            }
+            if (name.back() == '.') name.pop_back();
             return name;
         }
 
@@ -136,8 +121,6 @@ int main() {
         // RDATA: 93.184.216.34
         0x5D, 0xB8, 0xD8, 0x22
     };
-
-
 
     size_t test_offset = 0x0D;
     ResourceRecord rr(test_buffer, test_offset);
