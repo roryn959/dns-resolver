@@ -3,16 +3,16 @@
 
 Question::Question(uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
-    type_ = read_u16(buffer, offset);
-    class_ = read_u16(buffer, offset);
+    type_ = (Type) read_u16(buffer, offset);
+    class_ = (Class) read_u16(buffer, offset);
 }
 
 std::ostream& operator<< (std::ostream& out, const Question& q) {
     out << "******************\n";
     out << "Q\n";
     out << q.name_ << '\n';
-    out << q.type_ << '\n';
-    out << q.class_ << '\n';
+    out << (uint16_t) q.type_ << '\n';
+    out << (uint16_t) q.class_ << '\n';
     out << "******************\n";
     return out;
 }

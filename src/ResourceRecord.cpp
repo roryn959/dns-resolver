@@ -4,8 +4,8 @@
 
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
-    type_ = read_u16(buffer, offset);
-    class_ = read_u16(buffer, offset);
+    type_ = (Type) read_u16(buffer, offset);
+    class_ = (Class) read_u16(buffer, offset);
     ttl_ = read_u32(buffer, offset);
     rdlength_ = read_u16(buffer, offset);
     rdata_ = parse_data(buffer, offset, rdlength_);
@@ -15,8 +15,8 @@ std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     out << "******************\n";
     out << "RR\n";
     out << rr.name_ << '\n';
-    out << rr.type_ << '\n';
-    out << rr.class_ << '\n';
+    out << (uint16_t) rr.type_ << '\n';
+    out << (uint16_t) rr.class_ << '\n';
     out << rr.ttl_ << '\n';
     out << rr.rdlength_ << '\n';
     out << '[';
