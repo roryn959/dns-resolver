@@ -61,7 +61,6 @@ Header::RCODE Header::get_rcode() const {
 }
 
 std::ostream& operator<< (std::ostream& out, const Header& header) {
-    out << "******************\n";
     out << "Header\n";
     out << "ID: " << header.id_ << '\n';
     out << "QR: " << header.is_response() << '\n';
@@ -79,18 +78,20 @@ std::ostream& operator<< (std::ostream& out, const Header& header) {
     return out;
 }
 
-int main() {
-    uint8_t test_buffer[] = {
-    0xab, 0xcd,       // ID = 0xABCD (same as query)
-    0x81, 0x80,       // FLAGS = 0x8180 (QR=1, OPCODE=0, AA=0, TC=0, RD=1, RA=1, Z=0, RCODE=0)
-    0x00, 0x01,       // QDCOUNT = 1
-    0x00, 0x01,       // ANCOUNT = 1
-    0x00, 0x00,       // NSCOUNT = 0
-    0x00, 0x00        // ARCOUNT = 0
-};
+namespace Header_Test {
+    void test() {
+        uint8_t test_buffer[] = {
+            0xab, 0xcd,       // ID = 0xABCD (same as query)
+            0x81, 0x80,       // FLAGS = 0x8180 (QR=1, OPCODE=0, AA=0, TC=0, RD=1, RA=1, Z=0, RCODE=0)
+            0x00, 0x01,       // QDCOUNT = 1
+            0x00, 0x01,       // ANCOUNT = 1
+            0x00, 0x00,       // NSCOUNT = 0
+            0x00, 0x00        // ARCOUNT = 0
+        };
 
-    size_t test_offset = 0x00;
-    Header header(test_buffer, test_offset);
+        size_t test_offset = 0x00;
+        Header header(test_buffer, test_offset);
 
-    std::cout << header;
+        std::cout << header;
+    }
 }

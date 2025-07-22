@@ -36,13 +36,13 @@ const std::vector<uint8_t>& ResourceRecord::get_rdata() const {
 }
 
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
-    out << "******************\n";
     out << "RR\n";
-    out << rr.name_ << '\n';
-    out << (uint16_t) rr.type_ << '\n';
-    out << (uint16_t) rr.class_ << '\n';
-    out << rr.ttl_ << '\n';
-    out << rr.rdlength_ << '\n';
+    out << "NAME: " << rr.name_ << '\n';
+    out << "TYPE: " << (uint16_t) rr.type_ << '\n';
+    out << "CLASS: " << (uint16_t) rr.class_ << '\n';
+    out << "TTL: " << rr.ttl_ << '\n';
+    out << "RDLEN: " << rr.rdlength_ << '\n';
+    out << "RDATA:\n";
     out << '[';
     for (int i=0; i<rr.rdlength_; ++i) {
         out << (int) rr.rdata_[i];
@@ -55,35 +55,37 @@ std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     return out;
 }
 
-int main() {
-    uint8_t test_buffer[] = {
-        // Offset 0x00: "example.com"
-        0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
-        0x03, 0x63, 0x6F, 0x6D,
-        0x00,
+namespace RR_Test {
+    void test() {
+        uint8_t test_buffer[] = {
+            // Offset 0x00: "example.com"
+            0x07, 0x65, 0x78, 0x61, 0x6D, 0x70, 0x6C, 0x65,
+            0x03, 0x63, 0x6F, 0x6D,
+            0x00,
 
-        // Offset 0x0D: "www" + pointer to "example.com" (0x00)
-        0x03, 0x77, 0x77, 0x77,
-        0xC0, 0x00,
+            // Offset 0x0D: "www" + pointer to "example.com" (0x00)
+            0x03, 0x77, 0x77, 0x77,
+            0xC0, 0x00,
 
-        // Offset 0x13: TYPE A
-        0x00, 0x01,
+            // Offset 0x13: TYPE A
+            0x00, 0x01,
 
-        // CLASS IN
-        0x00, 0x01,
+            // CLASS IN
+            0x00, 0x01,
 
-        // TTL = 60
-        0x00, 0x00, 0x00, 0x3C,
+            // TTL = 60
+            0x00, 0x00, 0x00, 0x3C,
 
-        // RDLENGTH = 4
-        0x00, 0x04,
+            // RDLENGTH = 4
+            0x00, 0x04,
 
-        // RDATA: 93.184.216.34
-        0x5D, 0xB8, 0xD8, 0x22
-    };
+            // RDATA: 93.184.216.34
+            0x5D, 0xB8, 0xD8, 0x22
+        };
 
-    size_t test_offset = 0x0D;
-    ResourceRecord rr(test_buffer, test_offset);
+        size_t test_offset = 0x0D;
+        ResourceRecord rr(test_buffer, test_offset);
 
-    std::cout << rr;
+        std::cout << rr;
+    }
 }

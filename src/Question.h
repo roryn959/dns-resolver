@@ -33,7 +33,7 @@ public:
         HS
     };
 
-    Question(uint8_t* buffer, size_t& offset);
+    Question(const uint8_t* buffer, size_t& offset);
 
     const std::string& get_name() const;
     Type get_type() const;
