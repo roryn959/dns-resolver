@@ -11,6 +11,30 @@ ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     rdata_ = parse_data(buffer, offset, rdlength_);
 }
 
+const std::string& ResourceRecord::get_name() const {
+    return name_;
+}
+
+ResourceRecord::Type ResourceRecord::get_type() const {
+    return type_;
+}
+
+ResourceRecord::Class ResourceRecord::get_class() const {
+    return class_;
+}
+
+uint32_t ResourceRecord::get_ttl() const {
+    return ttl_;
+}
+
+uint16_t ResourceRecord::get_rdlength() const {
+    return rdlength_;
+}
+
+const std::vector<uint8_t>& ResourceRecord::get_rdata() const {
+    return rdata_;
+}
+
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     out << "******************\n";
     out << "RR\n";

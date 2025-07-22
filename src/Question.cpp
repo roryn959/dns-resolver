@@ -7,6 +7,18 @@ Question::Question(uint8_t* buffer, size_t& offset) {
     class_ = (Class) read_u16(buffer, offset);
 }
 
+const std::string& Question::get_name() const {
+    return name_;
+}
+
+Question::Type Question::get_type() const {
+    return type_;
+}
+
+Question::Class Question::get_class() const {
+    return class_;
+}
+
 std::ostream& operator<< (std::ostream& out, const Question& q) {
     out << "******************\n";
     out << "Q\n";

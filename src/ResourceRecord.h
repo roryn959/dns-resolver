@@ -36,8 +36,16 @@ public:
 
     ResourceRecord(const uint8_t* buffer, size_t& offset);
 
+    const std::string& get_name() const;
+    Type get_type() const;
+    Class get_class() const;
+    uint32_t get_ttl() const;
+    uint16_t get_rdlength() const;
+    const std::vector<uint8_t>& get_rdata() const;
+
     friend std::ostream& operator<< (std::ostream&, const ResourceRecord&);
 
+private:
     std::string name_;
     Type type_;
     Class class_;
