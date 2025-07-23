@@ -16,9 +16,9 @@ public:
 
     const Header& get_header() const;
     const std::vector<Question>& get_questions() const;
-    const std::vector<ResourceRecord> get_answers() const;
-    const std::vector<ResourceRecord> get_authorities() const;
-    const std::vector<ResourceRecord> get_additionals() const;
+    const std::vector<ResourceRecord>& get_answers() const;
+    const std::vector<ResourceRecord>& get_authorities() const;
+    const std::vector<ResourceRecord>& get_additionals() const;
 
     friend std::ostream& operator<< (std::ostream&, const Header&);
 

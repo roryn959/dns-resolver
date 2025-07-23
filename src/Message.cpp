@@ -28,15 +28,15 @@ const std::vector<Question>& Message::get_questions() const {
     return questions_;
 }
 
-const std::vector<ResourceRecord> Message::get_answers() const {
+const std::vector<ResourceRecord>& Message::get_answers() const {
     return answers_;
 }
 
-const std::vector<ResourceRecord> Message::get_authorities() const {
+const std::vector<ResourceRecord>& Message::get_authorities() const {
     return authorities_;
 }
 
-const std::vector<ResourceRecord> Message::get_additionals() const {
+const std::vector<ResourceRecord>& Message::get_additionals() const {
     return additionals_;
 }
 
