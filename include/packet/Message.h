@@ -11,7 +11,6 @@
 
 class Message {
 public:
-
     Message(const uint8_t* buffer, size_t& offset);
 
     const Header& get_header() const;
@@ -20,10 +19,9 @@ public:
     const std::vector<ResourceRecord>& get_authorities() const;
     const std::vector<ResourceRecord>& get_additionals() const;
 
-    friend std::ostream& operator<< (std::ostream&, const Header&);
+    friend std::ostream& operator<< (std::ostream&, const Message&);
 
 private:
-
     Header header_;
     std::vector<Question> questions_;
     std::vector<ResourceRecord> answers_;

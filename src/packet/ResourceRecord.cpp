@@ -2,6 +2,49 @@
 #include <packet/ResourceRecord.h>
 #include "read_utils.h"
 
+
+std::string to_string(ResourceRecord::Type type) {
+    switch (type) {
+        case ResourceRecord::Type::A: return "A";
+        case ResourceRecord::Type::NS: return "NS";
+        case ResourceRecord::Type::MD: return "MD";
+        case ResourceRecord::Type::MF: return "MF";
+        case ResourceRecord::Type::CNAME: return "CNAME";
+        case ResourceRecord::Type::SOA: return "SOA";
+        case ResourceRecord::Type::MB: return "MB";
+        case ResourceRecord::Type::MG: return "MG";
+        case ResourceRecord::Type::MR: return "MR";
+        case ResourceRecord::Type::NULL_: return "NULL";
+        case ResourceRecord::Type::WKS: return "WKS";
+        case ResourceRecord::Type::PTR: return "PTR";
+        case ResourceRecord::Type::HINFO: return "HINFO";
+        case ResourceRecord::Type::MINFO: return "MINFO";
+        case ResourceRecord::Type::MX: return "MX";
+        case ResourceRecord::Type::TXT: return "TXT";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const ResourceRecord::Type& type) {
+    out << to_string(type);
+    return out;
+}
+
+std::string to_string(ResourceRecord::Class class_) {
+    switch (class_) {
+        case ResourceRecord::Class::IN: return "IN";
+        case ResourceRecord::Class::CS: return "CS";
+        case ResourceRecord::Class::CH: return "CH";
+        case ResourceRecord::Class::HS: return "HS";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const ResourceRecord::Class& class_) {
+    out << to_string(class_);
+    return out;
+}
+
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = (Type) read_u16(buffer, offset);
@@ -38,8 +81,8 @@ const std::vector<uint8_t>& ResourceRecord::get_rdata() const {
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     out << "RR\n";
     out << "NAME: " << rr.name_ << '\n';
-    out << "TYPE: " << (uint16_t) rr.type_ << '\n';
-    out << "CLASS: " << (uint16_t) rr.class_ << '\n';
+    out << "TYPE: " << rr.type_ << '\n';
+    out << "CLASS: " << rr.class_ << '\n';
     out << "TTL: " << rr.ttl_ << '\n';
     out << "RDLEN: " << rr.rdlength_ << '\n';
     out << "RDATA:\n";

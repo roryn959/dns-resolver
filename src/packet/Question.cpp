@@ -1,6 +1,48 @@
 #include <packet/Question.h>
 #include "read_utils.h"
 
+std::string to_string(Question::Type type) {
+    switch (type) {
+        case Question::Type::A: return "A";
+        case Question::Type::NS: return "NS";
+        case Question::Type::MD: return "MD";
+        case Question::Type::MF: return "MF";
+        case Question::Type::CNAME: return "CNAME";
+        case Question::Type::SOA: return "SOA";
+        case Question::Type::MB: return "MB";
+        case Question::Type::MG: return "MG";
+        case Question::Type::MR: return "MR";
+        case Question::Type::NULL_: return "NULL";
+        case Question::Type::WKS: return "WKS";
+        case Question::Type::PTR: return "PTR";
+        case Question::Type::HINFO: return "HINFO";
+        case Question::Type::MINFO: return "MINFO";
+        case Question::Type::MX: return "MX";
+        case Question::Type::TXT: return "TXT";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const Question::Type& type) {
+    out << to_string(type);
+    return out;
+}
+
+std::string to_string(Question::Class class_) {
+    switch (class_) {
+        case Question::Class::IN: return "IN";
+        case Question::Class::CS: return "CS";
+        case Question::Class::CH: return "CH";
+        case Question::Class::HS: return "HS";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const Question::Class& class_) {
+    out << to_string(class_);
+    return out;
+}
+
 Question::Question(const uint8_t* buffer, size_t& offset) {
     name_ = parse_name(buffer, offset);
     type_ = (Type) read_u16(buffer, offset);
@@ -22,8 +64,8 @@ Question::Class Question::get_class() const {
 std::ostream& operator<< (std::ostream& out, const Question& q) {
     out << "Question\n";
     out << "QNAME: " << q.name_ << '\n';
-    out << "TYPE: " << (uint16_t) q.type_ << '\n';
-    out << "CLASS: " << (uint16_t) q.class_ << '\n';
+    out << "TYPE: " << q.type_ << '\n';
+    out << "CLASS: " << q.class_ << '\n';
     out << "******************\n";
     return out;
 }

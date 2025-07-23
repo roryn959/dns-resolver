@@ -1,5 +1,6 @@
 #include <packet/Message.h>
 
+
 Message::Message(const uint8_t *buffer, size_t& offset)
     : header_(buffer, offset)
 {
@@ -40,24 +41,24 @@ const std::vector<ResourceRecord>& Message::get_additionals() const {
     return additionals_;
 }
 
-std::ostream& operator<<(std::ostream& out, Message& msg) {
+std::ostream& operator<<(std::ostream& out, const Message& msg) {
 
     out << "------ DNS Message ------\n";
     out << "--- HEADER ---\n";
-    out << msg.get_header();
+    out << msg.header_;
     for (auto& q : msg.get_questions()) {
         out << q;
     }
     out << "--- ANSWERS ---\n";
-    for (auto& r : msg.get_answers()) {
+    for (auto& r : msg.answers_) {
         out << r;
     }
     out << "--- AUTHORITIES ---\n";
-    for (auto& r : msg.get_authorities()) {
+    for (auto& r : msg.authorities_) {
         out << r;
     }
     out << "--- ADDITIONALS ---\n";
-    for (auto& r : msg.get_additionals()) {
+    for (auto& r : msg.additionals_) {
         out << r;
     }
 

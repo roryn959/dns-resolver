@@ -45,7 +45,6 @@ private:
     std::string name_;
     Type type_;
     Class class_;
-
 };
 
 #endif

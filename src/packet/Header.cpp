@@ -1,6 +1,39 @@
 #include <packet/Header.h>
 #include "read_utils.h"
 
+#include <string>
+
+std::string to_string(Header::OPCODE opcode) {
+    switch (opcode) {
+        case Header::OPCODE::QUERY: return "QUERY";
+        case Header::OPCODE::IQUERY: return "IQUERY";
+        case Header::OPCODE::STATUS: return "STATUS";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const Header::OPCODE& opcode) {
+    out << to_string(opcode);
+    return out;
+}
+
+std::string to_string(Header::RCODE rcode) {
+    switch (rcode) {
+        case Header::RCODE::NO_ERROR: return "NO_ERROR";
+        case Header::RCODE::FORMAT_ERROR: return "FORMAT_ERROR";
+        case Header::RCODE::SERVER_FAILURE: return "SERVER_FAILURE";
+        case Header::RCODE::NAME_ERROR: return "NAME_ERROR";
+        case Header::RCODE::NOT_IMPLEMENTED: return "NOT_IMPLEMENTED";
+        case Header::RCODE::REFUSED: return "REFUSED";
+        default: return "UNKNOWN";
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, const Header::RCODE& rcode) {
+    out << to_string(rcode);
+    return out;
+}
+
 Header::Header(const uint8_t* buffer, size_t& offset) {
     id_ = read_u16(buffer, offset);
     options_ = read_u16(buffer, offset);
@@ -64,17 +97,18 @@ std::ostream& operator<< (std::ostream& out, const Header& header) {
     out << "Header\n";
     out << "ID: " << header.id_ << '\n';
     out << "QR: " << header.is_response() << '\n';
-    out << "OPCODE: " << (int) header.get_opcode() << '\n';
+    out << "OPCODE: " << header.get_opcode() << '\n';
     out << "AA: " << header.is_authoritative_answer() << '\n';
     out << "TC: " << header.is_truncated() << '\n';
     out << "RD: " << header.is_recursion_desired() << '\n';
     out << "RA: " << header.is_recursion_available() << '\n';
-    out << "RCODE: " << (int) header.get_rcode() << '\n';
+    out << "RCODE: " << header.get_rcode() << '\n';
     out << "QDs: " << header.qdcount_ << '\n';
     out << "ANs: " << header.ancount_ << '\n';
     out << "NSs: " << header.nscount_ << '\n';
     out << "ARs: " << header.arcount_ << '\n';
     out << "******************\n";
+
     return out;
 }
 
