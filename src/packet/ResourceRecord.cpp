@@ -1,5 +1,5 @@
 
-#include "ResourceRecord.h"
+#include <packet/ResourceRecord.h>
 #include "read_utils.h"
 
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {

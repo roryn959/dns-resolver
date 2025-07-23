@@ -1,4 +1,4 @@
-#include "Message.h"
+#include <packet/Message.h>
 
 Message::Message(const uint8_t *buffer, size_t& offset)
     : header_(buffer, offset)

@@ -10,3 +10,5 @@ Makefile
 .clang-tidy
 client.cpp
 /.vscode/
+demo_socket_receiver.cpp
+demo_socket_sender.cpp
