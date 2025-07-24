@@ -30,4 +30,8 @@ private:
 
 };
 
+namespace Message_Test {
+    void test();
+}
+
 #endif

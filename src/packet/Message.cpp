@@ -65,51 +65,53 @@ std::ostream& operator<<(std::ostream& out, const Message& msg) {
     return out;
 }
 
-int main() {
-    [[maybe_unused]] uint8_t test_query_buffer[] = {
-        // ----- Header -----
-        0x12, 0x34,             // ID = 0x1234
-        0x01, 0x00,             // Flags = 0x0100 (standard query, RD=1)
-        0x00, 0x01,             // QDCOUNT = 1
-        0x00, 0x00,             // ANCOUNT = 0
-        0x00, 0x00,             // NSCOUNT = 0
-        0x00, 0x00,             // ARCOUNT = 0
+namespace Message_Test {
+    void test() {
+        [[maybe_unused]] uint8_t test_query_buffer[] = {
+            // ----- Header -----
+            0x12, 0x34,             // ID = 0x1234
+            0x01, 0x00,             // Flags = 0x0100 (standard query, RD=1)
+            0x00, 0x01,             // QDCOUNT = 1
+            0x00, 0x00,             // ANCOUNT = 0
+            0x00, 0x00,             // NSCOUNT = 0
+            0x00, 0x00,             // ARCOUNT = 0
 
-        // ----- Question Section -----
-        0x07, 'e', 'x', 'a', 'm', 'p', 'l', 'e', // "example"
-        0x03, 'c', 'o', 'm',                     // "com"
-        0x00,                                   // End of domain (root)
-        0x00, 0x01,                             // QTYPE = 1 (A record)
-        0x00, 0x01                              // QCLASS = 1 (IN)
-    };
+            // ----- Question Section -----
+            0x07, 'e', 'x', 'a', 'm', 'p', 'l', 'e', // "example"
+            0x03, 'c', 'o', 'm',                     // "com"
+            0x00,                                   // End of domain (root)
+            0x00, 0x01,                             // QTYPE = 1 (A record)
+            0x00, 0x01                              // QCLASS = 1 (IN)
+        };
 
-    [[maybe_unused]] uint8_t test_response_buffer[] = {
-        // ----- Header (12 bytes) -----
-        0x12, 0x34,       // ID = 0x1234
-        0x81, 0x80,       // FLAGS = 1000 0001 1000 0000 (QR=1, RD=1, RA=1)
-        0x00, 0x01,       // QDCOUNT = 1
-        0x00, 0x01,       // ANCOUNT = 1
-        0x00, 0x00,       // NSCOUNT = 0
-        0x00, 0x00,       // ARCOUNT = 0
+        [[maybe_unused]] uint8_t test_response_buffer[] = {
+            // ----- Header (12 bytes) -----
+            0x12, 0x34,       // ID = 0x1234
+            0x81, 0x80,       // FLAGS = 1000 0001 1000 0000 (QR=1, RD=1, RA=1)
+            0x00, 0x01,       // QDCOUNT = 1
+            0x00, 0x01,       // ANCOUNT = 1
+            0x00, 0x00,       // NSCOUNT = 0
+            0x00, 0x00,       // ARCOUNT = 0
 
-        // ----- Question Section -----
-        0x07, 'e', 'x', 'a', 'm', 'p', 'l', 'e',
-        0x03, 'c', 'o', 'm',
-        0x00,             // End of domain name
-        0x00, 0x01,       // QTYPE = 1 (A)
-        0x00, 0x01,       // QCLASS = 1 (IN)
+            // ----- Question Section -----
+            0x07, 'e', 'x', 'a', 'm', 'p', 'l', 'e',
+            0x03, 'c', 'o', 'm',
+            0x00,             // End of domain name
+            0x00, 0x01,       // QTYPE = 1 (A)
+            0x00, 0x01,       // QCLASS = 1 (IN)
 
-        // ----- Answer Section -----
-        0xC0, 0x0C,       // Name = pointer to offset 12 (example.com)
-        0x00, 0x01,       // TYPE = 1 (A)
-        0x00, 0x01,       // CLASS = 1 (IN)
-        0x00, 0x00, 0x00, 0x3C, // TTL = 60 seconds
-        0x00, 0x04,       // RDLENGTH = 4
-        0x5D, 0xB8, 0xD8, 0x22  // RDATA = 93.184.216.34
-    };
+            // ----- Answer Section -----
+            0xC0, 0x0C,       // Name = pointer to offset 12 (example.com)
+            0x00, 0x01,       // TYPE = 1 (A)
+            0x00, 0x01,       // CLASS = 1 (IN)
+            0x00, 0x00, 0x00, 0x3C, // TTL = 60 seconds
+            0x00, 0x04,       // RDLENGTH = 4
+            0x5D, 0xB8, 0xD8, 0x22  // RDATA = 93.184.216.34
+        };
 
-    size_t test_offset = 0x00;
-    Message message(test_response_buffer, test_offset);
+        size_t test_offset = 0x00;
+        Message message(test_response_buffer, test_offset);
 
-    std::cout << message;
+        std::cout << message;
+    }
 }

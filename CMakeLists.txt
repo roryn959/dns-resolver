@@ -15,6 +15,8 @@ file(GLOB PACKET_SOURCES src/packet/*.cpp)
 set(SOURCES
     ${PACKET_SOURCES}
     src/read_utils.cpp
+    src/Receiver.cpp
+    main.cpp
 )
 
 add_executable(dns_resolver ${SOURCES})
