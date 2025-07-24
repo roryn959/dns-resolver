@@ -53,8 +53,6 @@ const IncomingPacket Receiver::listen() {
 
     if (bytes_received < 0) {
         throw "Receive failed";
-    } else {
-        std::cout << "Received some stuff:\n" << buffer << std::endl;
     }
 
     return IncomingPacket {client_addr, buffer, (size_t) bytes_received};

@@ -16,6 +16,7 @@ set(SOURCES
     ${PACKET_SOURCES}
     src/read_utils.cpp
     src/Receiver.cpp
+    src/Resolver.cpp
     main.cpp
 )
 

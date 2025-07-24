@@ -1,7 +1,7 @@
 #include <packet/Message.h>
 
 
-Message::Message(const uint8_t *buffer, size_t& offset)
+Message::Message(const uint8_t *buffer, size_t offset=0)
     : header_(buffer, offset)
 {
     for (int i=0; i<header_.get_qdcount(); ++i) {

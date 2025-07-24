@@ -1,5 +1,6 @@
-#include <Receiver.h>
+#include "include/Resolver.h"
 
 int main() {
-    Receiver_Test::test();
+    Resolver resolver;
+    resolver.run();
 }

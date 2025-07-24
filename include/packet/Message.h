@@ -11,7 +11,7 @@
 
 class Message {
 public:
-    Message(const uint8_t* buffer, size_t& offset);
+    Message(const uint8_t* buffer, size_t offset);
 
     const Header& get_header() const;
     const std::vector<Question>& get_questions() const;
