@@ -1,5 +1,4 @@
 #include <packet/Header.h>
-#include "read_utils.h"
 
 #include <string>
 
@@ -47,24 +46,47 @@ uint16_t Header::get_id() const {
     return id_;
 }
 
+void Header::set_id(uint16_t id) {
+    id_ = id;
+}
+
 uint16_t Header::get_qdcount() const {
     return qdcount_;
+}
+
+void Header::set_qdcount(uint16_t count) {
+    qdcount_ = count;
 }
 
 uint16_t Header::get_ancount() const {
     return ancount_;
 }
 
+void Header::set_ancount(uint16_t count) {
+    ancount_ = count;
+}
+
 uint16_t Header::get_nscount() const {
     return nscount_;
+}
+void Header::set_nscount(uint16_t count) {
+    nscount_ = count;
 }
 
 uint16_t Header::get_arcount() const {
     return arcount_;
 }
 
+void Header::set_arcount(uint16_t count) {
+    arcount_ = count;
+}
+
 bool Header::is_response() const {
     return (options_ & 0x8000);
+}
+
+void Header::set_response(bool response) {
+    set_bit(options_, 0x8000, response);
 }
 
 Header::OPCODE Header::get_opcode() const {
@@ -72,25 +94,53 @@ Header::OPCODE Header::get_opcode() const {
     return (OPCODE) raw_opcode;
 }
 
+void Header::set_opcode(OPCODE opcode) {
+    uint16_t raw_opcode = (uint16_t) opcode;
+    options_ &= ~0x7800;
+    options_ |= (raw_opcode << 11);
+}
+
 bool Header::is_authoritative_answer() const {
     return (options_ & 0x0400);
+}
+
+void Header::set_authoritative_answer(bool aa) {
+    set_bit(options_, 0x0400, aa);
 }
 
 bool Header::is_truncated() const {
     return (options_ & 0x0200);
 }
 
+void Header::set_truncated(bool trunc) {
+    set_bit(options_, 0x0200, trunc);
+}
+
 bool Header::is_recursion_desired() const {
     return (options_ & 0x0100);
+}
+
+void Header::set_recursion_desired(bool desired) {
+    set_bit(options_, 0x0100, desired);
 }
 
 bool Header::is_recursion_available() const {
     return (options_ & 0x0080);
 }
 
+void Header::set_recursion_available(bool available) {
+    set_bit(options_, 0x0080, available);
+}
+
 Header::RCODE Header::get_rcode() const {
     uint16_t raw_rcode = (options_ & 0x000F);
     return (Header::RCODE) raw_rcode;
+}
+
+void Header::set_rcode(RCODE rcode) {
+    uint16_t raw_rcode = (uint16_t) rcode;
+    options_ &= ~0x000F;
+    options_ |= raw_rcode;
 }
 
 std::ostream& operator<< (std::ostream& out, const Header& header) {

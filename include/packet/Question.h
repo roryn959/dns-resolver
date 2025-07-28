@@ -1,6 +1,8 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
+#include "bit_utils.h"
+
 #include <cstdint>
 #include <string>
 #include <iostream>
@@ -33,6 +35,7 @@ public:
         HS
     };
 
+    Question() = default;
     Question(const uint8_t* buffer, size_t& offset);
 
     const std::string& get_name() const;

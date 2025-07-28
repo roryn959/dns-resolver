@@ -1,6 +1,8 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+#include "bit_utils.h"
+
 #include <cstdint>
 #include <string>
 #include <iostream>
@@ -26,18 +28,30 @@ public:
     Header(const uint8_t* buffer, size_t& offset);
 
     uint16_t get_id() const;
+    void set_id(uint16_t);
     uint16_t get_qdcount() const;
+    void set_qdcount(uint16_t);
     uint16_t get_ancount() const;
+    void set_ancount(uint16_t);
     uint16_t get_nscount() const;
+    void set_nscount(uint16_t);
     uint16_t get_arcount() const;
+    void set_arcount(uint16_t);
 
     bool is_response() const;
+    void set_response(bool);
     OPCODE get_opcode() const;
+    void set_opcode(OPCODE);
     bool is_authoritative_answer() const;
+    void set_authoritative_answer(bool);
     bool is_truncated() const;
+    void set_truncated(bool);
     bool is_recursion_desired() const;
+    void set_recursion_desired(bool);
     bool is_recursion_available() const;
+    void set_recursion_available(bool);
     RCODE get_rcode() const;
+    void set_rcode(RCODE);
 
     friend std::ostream& operator<< (std::ostream&, const Header&);
 

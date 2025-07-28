@@ -1,6 +1,5 @@
 
 #include <packet/ResourceRecord.h>
-#include "read_utils.h"
 
 
 std::string to_string(ResourceRecord::Type type) {

@@ -1,4 +1,4 @@
-#include "read_utils.h"
+#include "bit_utils.h"
 
 constexpr uint8_t END_OF_LABEL = 0x00;
 constexpr uint8_t POINTER_TO_LABEL = 0xC0;
@@ -54,4 +54,8 @@ std::vector<uint8_t> parse_data(const uint8_t* buffer, size_t& offset, uint16_t 
         data.push_back(read_u8(buffer, offset));
     }
     return data;
+}
+
+void set_bit(uint16_t& bitstring, uint16_t bitmask, bool enabled) {
+    enabled ? (bitstring |= bitmask) : (bitstring &= ~bitmask);
 }

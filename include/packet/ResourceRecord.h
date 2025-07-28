@@ -1,6 +1,8 @@
 #ifndef RESOURCE_RECORD_H
 #define RESOURCE_RECORD_H
 
+#include "bit_utils.h"
+
 #include <cstdint>
 #include <string>
 #include <vector>
