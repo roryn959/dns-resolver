@@ -61,14 +61,14 @@ void write_u8(uint8_t* const buffer, size_t& offset, uint8_t value) {
 }
 
 void write_u16(uint8_t* const buffer, size_t& offset, uint16_t value) {
-    uint8_t left = (uint8_t) (value & 0xFF00 >> 8);
+    uint8_t left = (uint8_t) ((value & 0xFF00) >> 8);
     uint8_t right = (uint8_t) (value & 0x00FF);
     write_u8(buffer, offset, left);
     write_u8(buffer, offset, right);
 }
 
 void write_u32(uint8_t* const buffer, size_t& offset, uint32_t value) {
-    uint16_t left = (uint16_t) (value & 0xFFFF0000 >> 16);
+    uint16_t left = (uint16_t) ((value & 0xFFFF0000) >> 16);
     uint16_t right = (uint16_t) (value & 0x0000FFFF);
     write_u16(buffer, offset, left);
     write_u16(buffer, offset, right);
