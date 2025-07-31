@@ -53,6 +53,15 @@ ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     rdata_ = read_data(buffer, offset, rdlength_);
 }
 
+void ResourceRecord::serialise(uint8_t* const buffer, size_t& offset) const {
+    write_name(buffer, offset, name_);
+    write_u16(buffer, offset, (uint16_t) type_);
+    write_u16(buffer, offset, (uint16_t) class_);
+    write_u32(buffer, offset, ttl_);
+    write_u16(buffer, offset, rdlength_);
+    write_data(buffer, offset, rdata_);
+}
+
 const std::string& ResourceRecord::get_name() const {
     return name_;
 }
@@ -127,7 +136,14 @@ namespace RR_Test {
 
         size_t test_offset = 0x0D;
         ResourceRecord rr(test_buffer, test_offset);
-
         std::cout << rr;
+
+        uint8_t* temp_buffer = new uint8_t[512];
+        size_t offset = 0;
+        rr.serialise(temp_buffer, offset);
+
+        offset = 0;
+        ResourceRecord temp_rr(temp_buffer, offset);
+        std::cout << temp_rr;
     }
 }

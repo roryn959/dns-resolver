@@ -38,6 +38,8 @@ public:
 
     ResourceRecord(const uint8_t* buffer, size_t& offset);
 
+    void serialise(uint8_t* const buffer, size_t& offset) const;
+
     const std::string& get_name() const;
     Type get_type() const;
     Class get_class() const;
@@ -56,5 +58,9 @@ private:
     std::vector<uint8_t> rdata_;
 
 };
+
+namespace RR_Test {
+    void test();
+}
 
 #endif

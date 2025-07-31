@@ -89,6 +89,7 @@ void write_name(uint8_t* const buffer, size_t& offset, std::string name) {
         }
     }
 
+    write_u8(buffer, offset, (uint8_t) queue.size());
     while (!queue.empty()) {
         write_u8(buffer, offset, queue.front());
         queue.pop();

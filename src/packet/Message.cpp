@@ -1,7 +1,7 @@
 #include <packet/Message.h>
 
 
-Message::Message(const uint8_t *buffer, size_t offset=0)
+Message::Message(const uint8_t *buffer, size_t offset)
     : header_(buffer, offset)
 {
     for (int i=0; i<header_.get_qdcount(); ++i) {
@@ -19,6 +19,14 @@ Message::Message(const uint8_t *buffer, size_t offset=0)
     for (int i=0; i<header_.get_arcount(); ++i) {
         additionals_.push_back(ResourceRecord(buffer, offset));
     }
+}
+
+void Message::serialise(uint8_t* const buffer, size_t offset) const {
+    header_.serialise(buffer, offset);
+    for (const Question& q : questions_) q.serialise(buffer, offset);
+    for (const ResourceRecord& answer : answers_) answer.serialise(buffer, offset);
+    for (const ResourceRecord& authority : authorities_) authority.serialise(buffer, offset);
+    for (const ResourceRecord& additional : additionals_) additional.serialise(buffer, offset);
 }
 
 bool Message::contains_answer() const {

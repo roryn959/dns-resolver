@@ -27,6 +27,8 @@ public:
 
     Header(const uint8_t* buffer, size_t& offset);
 
+    void serialise(uint8_t* const buffer, size_t& offset) const;
+
     uint16_t get_id() const;
     void set_id(uint16_t);
     uint16_t get_qdcount() const;
