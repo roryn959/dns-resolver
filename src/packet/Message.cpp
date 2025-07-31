@@ -21,6 +21,10 @@ Message::Message(const uint8_t *buffer, size_t offset=0)
     }
 }
 
+bool Message::contains_answer() const {
+    return header_.get_ancount() > 0;
+}
+
 const Header& Message::get_header() const {
     return header_;
 }

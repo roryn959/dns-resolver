@@ -19,6 +19,8 @@ public:
     const std::vector<ResourceRecord>& get_authorities() const;
     const std::vector<ResourceRecord>& get_additionals() const;
 
+    bool contains_answer() const;
+
     friend std::ostream& operator<< (std::ostream&, const Message&);
 
 private:
