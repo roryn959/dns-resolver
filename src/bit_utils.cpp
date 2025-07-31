@@ -21,7 +21,7 @@ uint32_t read_u32(const uint8_t* buffer, size_t& offset) {
     return result;
 }
 
-std::string parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
+std::string read_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
     std::string name;
     while (true) {
         const uint8_t label_length = read_u8(buffer, offset);
@@ -36,7 +36,7 @@ std::string parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
                 throw "Nested pointer detected";
             }
             size_t pointer_loc = (size_t) read_u8(buffer, offset);
-            name += parse_name(buffer, pointer_loc, true);
+            name += read_name(buffer, pointer_loc, true);
             return name;
         }
 
@@ -48,12 +48,59 @@ std::string parse_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
     }
 }
 
-std::vector<uint8_t> parse_data(const uint8_t* buffer, size_t& offset, uint16_t amount) {
+std::vector<uint8_t> read_data(const uint8_t* buffer, size_t& offset, uint16_t amount) {
     std::vector<uint8_t> data;
     for (int i=0; i<amount; ++i) {
         data.push_back(read_u8(buffer, offset));
     }
     return data;
+}
+
+void write_u8(uint8_t* const buffer, size_t& offset, uint8_t value) {
+    buffer[offset++] = value;
+}
+
+void write_u16(uint8_t* const buffer, size_t& offset, uint16_t value) {
+    uint8_t left = (uint8_t) (value & 0xFF00 >> 8);
+    uint8_t right = (uint8_t) (value & 0x00FF);
+    write_u8(buffer, offset, left);
+    write_u8(buffer, offset, right);
+}
+
+void write_u32(uint8_t* const buffer, size_t& offset, uint32_t value) {
+    uint16_t left = (uint16_t) (value & 0xFFFF0000 >> 16);
+    uint16_t right = (uint16_t) (value & 0x0000FFFF);
+    write_u16(buffer, offset, left);
+    write_u16(buffer, offset, right);
+}
+
+void write_name(uint8_t* const buffer, size_t& offset, std::string name) {
+    std::queue<uint8_t> queue;
+
+    for (char c : name) {
+        if (c == '.') {
+            write_u8(buffer, offset, (uint8_t) queue.size());
+            while (!queue.empty()) {
+                write_u8(buffer, offset, queue.front());
+                queue.pop();
+            }
+        } else {
+            queue.push((uint8_t) c);
+        }
+    }
+
+    while (!queue.empty()) {
+        write_u8(buffer, offset, queue.front());
+        queue.pop();
+    }
+
+    write_u8(buffer, offset, END_OF_LABEL);
+}
+
+void write_data(uint8_t* const buffer, size_t& offset, std::vector<uint8_t> data) {
+    for (uint8_t datum : data) {
+        write_u8(buffer, offset, datum);
+    }
 }
 
 void set_bit(uint16_t& bitstring, uint16_t bitmask, bool enabled) {

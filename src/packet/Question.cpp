@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& out, const Question::Class& class_) {
 }
 
 Question::Question(const uint8_t* buffer, size_t& offset) {
-    name_ = parse_name(buffer, offset);
+    name_ = read_name(buffer, offset);
     type_ = (Type) read_u16(buffer, offset);
     class_ = (Class) read_u16(buffer, offset);
 }

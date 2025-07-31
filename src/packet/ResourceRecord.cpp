@@ -45,12 +45,12 @@ std::ostream& operator<<(std::ostream& out, const ResourceRecord::Class& class_)
 }
 
 ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
-    name_ = parse_name(buffer, offset);
+    name_ = read_name(buffer, offset);
     type_ = (Type) read_u16(buffer, offset);
     class_ = (Class) read_u16(buffer, offset);
     ttl_ = read_u32(buffer, offset);
     rdlength_ = read_u16(buffer, offset);
-    rdata_ = parse_data(buffer, offset, rdlength_);
+    rdata_ = read_data(buffer, offset, rdlength_);
 }
 
 const std::string& ResourceRecord::get_name() const {
