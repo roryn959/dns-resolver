@@ -4,7 +4,7 @@ Receiver::Receiver() {
     create_socket();
     fill_address();
     bind_socket();
-    std::cout << "Server is listening on port " << PORT << "...\n";
+    std::cout << "Server is listening on port " << RECEIVE_PORT << "...\n";
 }
 
 Receiver::~Receiver() {
@@ -22,7 +22,7 @@ void Receiver::fill_address() {
     memset(&server_addr_, 0, addr_length_);
     server_addr_.sin_family = AF_INET;
     server_addr_.sin_addr.s_addr = INADDR_ANY;
-    server_addr_.sin_port = htons(PORT);
+    server_addr_.sin_port = htons(RECEIVE_PORT);
 }
 
 void Receiver::bind_socket() {

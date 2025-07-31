@@ -5,10 +5,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <cstring>
-#include <cstdint>
 #include <iostream>
+#include <cstdint>
 
-#define PORT 8080
+#define RECEIVE_PORT 8080
 #define BUFFER_SIZE 512
 
 struct IncomingPacket {
