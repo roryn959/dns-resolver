@@ -3,24 +3,26 @@
 
 void Resolver::run() {
     while (running_) {
-        IncomingPacket packet = receiver.listen();
+        Packet packet = communicator_.listen();
         display_packet(packet);
+        solve_question(packet);
     }
 }
 
-void Resolver::display_packet(const IncomingPacket packet) const {
+void Resolver::display_packet(const Packet packet) const {
     std::cout << "Packet received by resolver\n";
-    std::cout << "IP: " << packet.client_addr_.sin_addr.s_addr << std::endl;
-    std::cout << "Port: " << packet.client_addr_.sin_port << std::endl;
+    char ipstr[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(packet.addr_.sin_addr.s_addr), ipstr, sizeof(ipstr));
+    std::cout << "IP: " << ipstr << std::endl;
+    std::cout << "Port: " << ntohs(packet.addr_.sin_port) << std::endl;
     std::cout << "Packet length: " << packet.length_ << std::endl;
     Message msg(packet.buffer_, 0);
-    Header temp_head = msg.get_header();
-    temp_head.set_opcode(Header::OPCODE::IQUERY);
-    std::cout << "Modified header:\n";
-    std::cout << temp_head;
-    std::cout << msg;
 }
 
-void Resolver::handle_msg(Message msg) {
-    std::cout << "TODO: Handle msg...\n";
+void Resolver::solve_question(const Packet packet) {
+    sockaddr_in client_addr = packet.addr_;
+    Message msg(packet.buffer_, 0);
+    
+    // throw back (delete!)
+    communicator_.send(packet);
 }

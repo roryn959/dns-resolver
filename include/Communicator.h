@@ -1,6 +1,9 @@
-#ifndef RECEIVER_H
-#define RECEIVER_H
+#ifndef COMMUNICATOR_H
+#define COMMUNICATOR_H
 
+#include "packet/Message.h"
+
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -8,34 +11,35 @@
 #include <iostream>
 #include <cstdint>
 
-#define RECEIVE_PORT 8080
+#define SERVER_PORT 8080
+#define UDP_PORT 53
 #define BUFFER_SIZE 512
 
-struct IncomingPacket {
-    const sockaddr_in client_addr_;
+struct Packet {
+    const sockaddr_in addr_;
     const uint8_t* buffer_;
     const size_t length_;
 };
 
-class Receiver {
+class Communicator {
 public:
-    Receiver();
-    ~Receiver();
+    Communicator();
+    ~Communicator();
 
-    const IncomingPacket listen();
+    const Packet listen();
+    void send(Packet packet);
+    void send(const std::string& ip, Message& message);
+
 
 private:
-    int server_fd_;
+    int sock_;
     struct sockaddr_in server_addr_;
     const socklen_t addr_length_ = sizeof(sockaddr_in);
 
     void create_socket();
     void fill_address();
     void bind_socket();
-};
 
-namespace Receiver_Test {
-    void test();
-}
+};
 
 #endif

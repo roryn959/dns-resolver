@@ -15,7 +15,7 @@ file(GLOB PACKET_SOURCES src/packet/*.cpp)
 set(SOURCES
     ${PACKET_SOURCES}
     src/bit_utils.cpp
-    src/Receiver.cpp
+    src/Communicator.cpp
     src/Resolver.cpp
     main.cpp
 )

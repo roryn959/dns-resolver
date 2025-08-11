@@ -1,6 +1,8 @@
 #ifndef READ_UTILS_H
 #define READ_UTILS_H
 
+#include <assert.h>
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -20,5 +22,6 @@ void write_data(uint8_t* const buffer, size_t&, std::vector<uint8_t> data);
 
 void set_bit(uint16_t& bitstring, uint16_t bitmask, bool enabled);
 
+uint32_t ip_from_bytes(std::vector<uint8_t>& bytes);
 
 #endif

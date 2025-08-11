@@ -1,7 +1,7 @@
 #ifndef RESOLVER_H
 #define RESOLVER_H
 
-#include "Receiver.h"
+#include "Communicator.h"
 #include "packet/Message.h"
 
 #include <map>
@@ -12,13 +12,12 @@ public:
     Resolver() = default;
 
     void run();
-    void display_packet(const IncomingPacket) const;
+    void display_packet(const Packet) const;
 
 private:
-    Receiver receiver;
-    std::unordered_map<uint16_t, sockaddr_in> id_to_client_;
+    Communicator communicator_;
     bool running_ = true;
-    void handle_msg(Message);
+    void solve_question(const Packet);
 };
 
 #endif

@@ -107,3 +107,14 @@ void write_data(uint8_t* const buffer, size_t& offset, std::vector<uint8_t> data
 void set_bit(uint16_t& bitstring, uint16_t bitmask, bool enabled) {
     enabled ? (bitstring |= bitmask) : (bitstring &= ~bitmask);
 }
+
+uint32_t ip_from_bytes(std::vector<uint8_t>& bytes) {
+    assert(bytes.size()==4);
+
+    uint32_t res = 0;
+    res |= ( (uint32_t) bytes[0] ) << 24;
+    res |= ( (uint32_t) bytes[1] ) << 16;
+    res |= ( (uint32_t) bytes[2] ) << 8;
+    res |= ( (uint32_t) bytes[3] );
+    return htonl(res);
+}
