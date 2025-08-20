@@ -53,13 +53,17 @@ ResourceRecord::ResourceRecord(const uint8_t* buffer, size_t& offset) {
     rdata_ = read_data(buffer, offset, rdlength_);
 }
 
-void ResourceRecord::serialise(uint8_t* const buffer, size_t& offset) const {
-    write_name(buffer, offset, name_);
+size_t ResourceRecord::serialise(uint8_t* const buffer, size_t& offset) const {
+    size_t bytes = 0;
+    bytes += write_name(buffer, offset, name_);
     write_u16(buffer, offset, (uint16_t) type_);
     write_u16(buffer, offset, (uint16_t) class_);
     write_u32(buffer, offset, ttl_);
     write_u16(buffer, offset, rdlength_);
+    bytes += 10;
     write_data(buffer, offset, rdata_);
+    bytes += rdata_.size();
+    return bytes;
 }
 
 const std::string& ResourceRecord::get_name() const {

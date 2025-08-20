@@ -13,7 +13,7 @@ class Message {
 public:
     Message(const uint8_t* buffer, size_t offset=0);
 
-    void serialise(uint8_t* const buffer, size_t offset=0) const;
+    size_t serialise(uint8_t* const buffer, size_t offset=0) const;
 
     const Header& get_header() const;
     const std::vector<Question>& get_questions() const;

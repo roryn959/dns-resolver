@@ -38,7 +38,7 @@ public:
     Question() = default;
     Question(const uint8_t* buffer, size_t& offset);
 
-    void serialise(uint8_t* const buffer, size_t& offset) const;
+    size_t serialise(uint8_t* const buffer, size_t& offset) const;
 
     const std::string& get_name() const;
     Type get_type() const;

@@ -21,12 +21,14 @@ Message::Message(const uint8_t *buffer, size_t offset)
     }
 }
 
-void Message::serialise(uint8_t* const buffer, size_t offset) const {
-    header_.serialise(buffer, offset);
-    for (const Question& q : questions_) q.serialise(buffer, offset);
-    for (const ResourceRecord& answer : answers_) answer.serialise(buffer, offset);
-    for (const ResourceRecord& authority : authorities_) authority.serialise(buffer, offset);
-    for (const ResourceRecord& additional : additionals_) additional.serialise(buffer, offset);
+size_t Message::serialise(uint8_t* const buffer, size_t offset) const {
+    size_t bytes = 0;
+    bytes += header_.serialise(buffer, offset);
+    for (const Question& q : questions_) bytes += q.serialise(buffer, offset);
+    for (const ResourceRecord& answer : answers_) bytes += answer.serialise(buffer, offset);
+    for (const ResourceRecord& authority : authorities_) bytes += authority.serialise(buffer, offset);
+    for (const ResourceRecord& additional : additionals_) bytes += additional.serialise(buffer, offset);
+    return bytes;
 }
 
 bool Message::contains_answer() const {

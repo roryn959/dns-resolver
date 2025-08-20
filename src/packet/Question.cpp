@@ -48,10 +48,13 @@ Question::Question(const uint8_t* buffer, size_t& offset) {
     class_ = (Class) read_u16(buffer, offset);
 }
 
-void Question::serialise(uint8_t* const buffer, size_t& offset) const {
-    write_name(buffer, offset, name_);
+size_t Question::serialise(uint8_t* const buffer, size_t& offset) const {
+    size_t bytes = 0;
+    bytes += write_name(buffer, offset, name_);
     write_u16(buffer, offset, (uint16_t) type_);
     write_u16(buffer, offset, (uint16_t) class_);
+    bytes += 4;
+    return bytes;
 }
 
 const std::string& Question::get_name() const {

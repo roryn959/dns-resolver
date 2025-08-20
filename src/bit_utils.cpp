@@ -21,8 +21,9 @@ uint32_t read_u32(const uint8_t* buffer, size_t& offset) {
     return result;
 }
 
-std::string read_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
+std::string read_name(const uint8_t* buffer, size_t& offset) {
     std::string name;
+
     while (true) {
         const uint8_t label_length = read_u8(buffer, offset);
 
@@ -32,11 +33,8 @@ std::string read_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
         }
 
         if (label_length >= POINTER_TO_LABEL) {
-            if (is_pointer) {
-                throw "Nested pointer detected";
-            }
             size_t pointer_loc = (size_t) read_u8(buffer, offset);
-            name += read_name(buffer, pointer_loc, true);
+            name += read_name(buffer, pointer_loc);
             return name;
         }
 
@@ -44,7 +42,6 @@ std::string read_name(const uint8_t* buffer, size_t& offset, bool is_pointer) {
             name += (char) read_u8(buffer, offset);
         }
         name += '.';
-
     }
 }
 
@@ -74,13 +71,16 @@ void write_u32(uint8_t* const buffer, size_t& offset, uint32_t value) {
     write_u16(buffer, offset, right);
 }
 
-void write_name(uint8_t* const buffer, size_t& offset, std::string name) {
+size_t write_name(uint8_t* const buffer, size_t& offset, std::string name) {
+    size_t bytes = 0;
     std::queue<uint8_t> queue;
 
     for (char c : name) {
         if (c == '.') {
             write_u8(buffer, offset, (uint8_t) queue.size());
+            ++bytes;
             while (!queue.empty()) {
+                ++bytes;
                 write_u8(buffer, offset, queue.front());
                 queue.pop();
             }
@@ -90,12 +90,16 @@ void write_name(uint8_t* const buffer, size_t& offset, std::string name) {
     }
 
     write_u8(buffer, offset, (uint8_t) queue.size());
+    ++bytes;
     while (!queue.empty()) {
         write_u8(buffer, offset, queue.front());
+        ++bytes;
         queue.pop();
     }
 
     write_u8(buffer, offset, END_OF_LABEL);
+    ++bytes;
+    return bytes;
 }
 
 void write_data(uint8_t* const buffer, size_t& offset, std::vector<uint8_t> data) {

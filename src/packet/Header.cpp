@@ -42,13 +42,14 @@ Header::Header(const uint8_t* buffer, size_t& offset) {
     arcount_ = read_u16(buffer, offset);
 }
 
-void Header::serialise(uint8_t* const buffer, size_t& offset) const {
+size_t Header::serialise(uint8_t* const buffer, size_t& offset) const {
     write_u16(buffer, offset, id_);
     write_u16(buffer, offset, options_);
     write_u16(buffer, offset, qdcount_);
     write_u16(buffer, offset, ancount_);
     write_u16(buffer, offset, nscount_);
     write_u16(buffer, offset, arcount_);
+    return 12;
 }
 
 uint16_t Header::get_id() const {

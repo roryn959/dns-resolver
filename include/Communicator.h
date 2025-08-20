@@ -27,9 +27,8 @@ public:
     ~Communicator();
 
     const Packet listen();
-    void send(Packet packet);
-    void send(const std::string& ip, Message& message);
-
+    void send(const Packet& packet);
+    void send(const std::string& ip, const Message& msg);
 
 private:
     int sock_;
