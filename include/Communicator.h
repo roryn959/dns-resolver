@@ -29,6 +29,7 @@ public:
     const Packet listen();
     void send(const Packet& packet);
     void send(const std::string& ip, const Message& msg);
+    void send(const sockaddr_in& addr, const Message& msg);
 
 private:
     int sock_;

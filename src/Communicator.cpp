@@ -80,11 +80,15 @@ void Communicator::send(const std::string& ip, const Message& msg) {
         return;
     }
 
+    send(dest_addr, msg);
+}
+
+void Communicator::send(const sockaddr_in& addr, const Message& msg) {
     uint8_t* buffer = new uint8_t[BUFFER_SIZE];
     size_t bytes = msg.serialise(buffer);
     std::cout << "Serialisation contains " << bytes << " bytes.\n";
 
-    int sent = sendto(sock_, buffer, bytes, 0, (struct sockaddr *) &dest_addr, sizeof(dest_addr));
+    int sent = sendto(sock_, buffer, bytes, 0, (struct sockaddr *) &addr, sizeof(addr));
     if (sent == -1) {
         std::cout << "Did not send properly.\n";
     } else {

@@ -29,6 +29,15 @@ void Resolver::handle_query(const Packet& packet, const Message& query) {
     std::cout << "Received a query!\n";
     std::cout << query;
 
+    if (query.get_header().get_qdcount() < 1) {
+        std::cerr << "Query doesn't contain a question. Dropping...\n";
+        return;
+    }
+
+    if (query.get_header().get_qdcount() > 1) {
+        std::cerr << "Query contains more than one question. I can't do that yet!\n";
+    }
+
     uint16_t id = query.get_header().get_id();
 
     if (context_map_.contains(id)) {
@@ -47,6 +56,23 @@ void Resolver::handle_query(const Packet& packet, const Message& query) {
 void Resolver::handle_response(const Message& response) {
     std::cout << "Received a response!\n";
     std::cout << response;
+
+    const Header& header = response.get_header();
+    if (header.get_ancount() > 1) {
+        QueryContext& context = context_map_.at(header.get_id());
+
+        if (context.is_inner_) {
+            std::cout << "TODO: handle inner query.\n";
+            return;
+        }
+
+        std::cout << "I'm working on the response...\n";
+    }
+
+    std::cout << "I'm also working on it over here...\n";
+
+    QueryContext& context = context_map_.at(header.get_id());
+    communicator_.send(context.client_addr_, response);
 }
 
 /*
