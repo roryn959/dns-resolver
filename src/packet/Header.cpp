@@ -154,20 +154,20 @@ void Header::set_rcode(RCODE rcode) {
 }
 
 std::ostream& operator<< (std::ostream& out, const Header& header) {
-    out << "Header\n";
-    out << "ID: " << header.id_ << '\n';
-    out << "QR: " << header.is_response() << '\n';
-    out << "OPCODE: " << header.get_opcode() << '\n';
-    out << "AA: " << header.is_authoritative_answer() << '\n';
-    out << "TC: " << header.is_truncated() << '\n';
-    out << "RD: " << header.is_recursion_desired() << '\n';
-    out << "RA: " << header.is_recursion_available() << '\n';
-    out << "RCODE: " << header.get_rcode() << '\n';
-    out << "QDs: " << header.qdcount_ << '\n';
-    out << "ANs: " << header.ancount_ << '\n';
-    out << "NSs: " << header.nscount_ << '\n';
-    out << "ARs: " << header.arcount_ << '\n';
-    out << "******************\n";
+    out << ";; ->>HEADER<<- opcode: " << header.get_opcode();
+    out << ", status: " << header.get_opcode();
+    out << ", id: " << header.get_id();
+    out << "\n;; flags: ";
+    out << (header.is_response() ? "qr" : "q" );
+    if (header.is_authoritative_answer()) out << ", ar";
+    if (header.is_truncated()) out << ", tc";
+    if (header.is_recursion_desired()) out << ", rd";
+    if (header.is_recursion_available()) out << ", ra";
+    out << "; QUERY: " << header.qdcount_;
+    out << ", ANSWER: " << header.ancount_;
+    out << ", AUTHORITY: " << header.nscount_;
+    out << ", ADDITIONAL: " << header.arcount_;
+    out << "\n\n";
 
     return out;
 }

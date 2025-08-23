@@ -70,11 +70,11 @@ Question::Class Question::get_class() const {
 }
 
 std::ostream& operator<< (std::ostream& out, const Question& q) {
-    out << "Question\n";
-    out << "QNAME: " << q.name_ << '\n';
-    out << "TYPE: " << q.type_ << '\n';
-    out << "CLASS: " << q.class_ << '\n';
-    out << "******************\n";
+    out << ';' << q.name_ << "\t\t";
+    out << q.type_ << '\t';
+    out << q.class_ << '\t';
+    out << "\n\n";
+
     return out;
 }
 

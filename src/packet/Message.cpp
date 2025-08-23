@@ -57,21 +57,20 @@ const std::vector<ResourceRecord>& Message::get_additionals() const {
 
 std::ostream& operator<<(std::ostream& out, const Message& msg) {
 
-    out << "------ DNS Message ------\n";
-    out << "--- HEADER ---\n";
     out << msg.header_;
+    if (!msg.get_questions().empty()) out << ";; QUESTION SECTION:\n";
     for (auto& q : msg.get_questions()) {
         out << q;
     }
-    out << "--- ANSWERS ---\n";
+    if (!msg.get_answers().empty()) out << "\n;; ANSWER SECTION:\n";
     for (auto& r : msg.answers_) {
         out << r;
     }
-    out << "--- AUTHORITIES ---\n";
+    if (!msg.get_authorities().empty()) out << "\n;; AUTHORITY SECTION:\n";
     for (auto& r : msg.authorities_) {
         out << r;
     }
-    out << "--- ADDITIONALS ---\n";
+    if (!msg.get_additionals().empty()) out << "\n;; ADDITIONAL SECTION:\n";
     for (auto& r : msg.additionals_) {
         out << r;
     }

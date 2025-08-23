@@ -91,22 +91,13 @@ const std::vector<uint8_t>& ResourceRecord::get_rdata() const {
 }
 
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
-    out << "RR\n";
-    out << "NAME: " << rr.name_ << '\n';
-    out << "TYPE: " << rr.type_ << '\n';
-    out << "CLASS: " << rr.class_ << '\n';
-    out << "TTL: " << rr.ttl_ << '\n';
-    out << "RDLEN: " << rr.rdlength_ << '\n';
-    out << "RDATA:\n";
-    out << '[';
-    for (int i=0; i<rr.rdlength_; ++i) {
-        out << (int) rr.rdata_[i];
-        if (i < rr.rdlength_-1) {
-            out << ", ";
-        }
-    }
-    out << "]\n";
-    out << "******************\n";
+    out << rr.name_ << "\t\t";
+    out << rr.ttl_ << "\t";
+    out << rr.type_ << "\t";
+    out << rr.class_ << "\t";
+    for (uint8_t elem : rr.rdata_) out << (int) elem << "-";
+    out << '\n';
+
     return out;
 }
 
