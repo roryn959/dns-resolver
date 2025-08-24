@@ -20,6 +20,7 @@ std::string to_string(ResourceRecord::Type type) {
         case ResourceRecord::Type::MINFO: return "MINFO";
         case ResourceRecord::Type::MX: return "MX";
         case ResourceRecord::Type::TXT: return "TXT";
+        case ResourceRecord::Type::AAAA: return "AAAA";
         default: return "UNKNOWN";
     }
 }
@@ -95,7 +96,13 @@ std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     out << rr.ttl_ << "\t";
     out << rr.class_ << "\t";
     out << rr.type_ << "\t";
-    for (uint8_t elem : rr.rdata_) out << (int) elem << "-";
+    if (rr.type_ == ResourceRecord::Type::A) {
+        for (uint8_t elem : rr.rdata_) out << (int) elem << ".";
+    } else if (rr.type_ == ResourceRecord::Type::AAAA) {
+        for (uint8_t elem : rr.rdata_) out << (int) elem << ":";
+    } else {
+        for (uint8_t elem : rr.rdata_) out << (int) elem << "-";
+    }
     out << '\n';
 
     return out;

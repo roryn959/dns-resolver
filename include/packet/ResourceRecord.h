@@ -26,7 +26,8 @@ public:
         HINFO,
         MINFO,
         MX,
-        TXT
+        TXT,
+        AAAA = 28
     };
 
     enum class Class : uint16_t {
