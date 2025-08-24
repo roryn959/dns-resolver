@@ -29,6 +29,8 @@ public:
     const Packet listen();
     void send(const Packet& packet);
     void send(const std::string& ip, const Message& msg);
+    void send(const std::vector<uint8_t>& ip_vec, const Message& msg);
+    void send(const uint8_t* const pip, const Message& msg);
     void send(const sockaddr_in& addr, const Message& msg);
 
 private:

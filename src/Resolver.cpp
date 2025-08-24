@@ -45,10 +45,8 @@ void Resolver::handle_query(const Packet& packet, const Message& query) {
         return;
     }
 
-    QueryContext context { packet.addr_, false };
+    QueryContext context { packet.addr_, query, false };
     context_map_.insert( {id, context} );
-
-    std::cout << "Next step is to actually send the next packet...\n";
 
     communicator_.send(ROOT_SERVER_IP, query);
 }
@@ -58,21 +56,39 @@ void Resolver::handle_response(const Message& response) {
     std::cout << response;
 
     const Header& header = response.get_header();
+    QueryContext& context = context_map_.at(header.get_id());
+
     if (header.get_ancount() > 1) {
-        QueryContext& context = context_map_.at(header.get_id());
 
         if (context.is_inner_) {
             std::cout << "TODO: handle inner query.\n";
             return;
         }
 
-        std::cout << "I'm working on the response...\n";
+        communicator_.send(context.client_addr_, response);
+        context_map_.erase(header.get_id());
+        return;
     }
 
-    std::cout << "I'm also working on it over here...\n";
+    if (header.get_arcount() > 1) {
+        for (const ResourceRecord& rr : response.get_additionals()) {
+            if (rr.get_type() == ResourceRecord::Type::A) {
+                std::cout << "I plan to pass the query on to " << rr.get_name() << '\n';
+                communicator_.send(rr.get_rdata(), context.query);
+                return;
+            }
+        }
 
-    QueryContext& context = context_map_.at(header.get_id());
-    communicator_.send(context.client_addr_, response);
+        std::cout << "I did not find a record that was useful to me :(\n";
+        return;
+    }
+
+    if (header.get_nscount() > 1) {
+        std::cout << "This query would require an inner query. Dropping...\n";
+        return;
+    }
+
+    std::cout << "No useful info from this query. Dropping...\n";
 }
 
 /*

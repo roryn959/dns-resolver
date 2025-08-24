@@ -25,6 +25,7 @@
 
 struct QueryContext {
     sockaddr_in client_addr_;
+    Message query;
     bool is_inner_;
 };
 

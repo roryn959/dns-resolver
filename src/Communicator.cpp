@@ -83,6 +83,15 @@ void Communicator::send(const std::string& ip, const Message& msg) {
     send(dest_addr, msg);
 }
 
+void Communicator::send(const std::vector<uint8_t>& ip_vec, const Message& msg) {
+    struct sockaddr_in dest_addr;
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_port = htons(UDP_PORT);
+    memcpy(&dest_addr.sin_addr, ip_vec.data(), 4);
+
+    send(dest_addr, msg);
+}
+
 void Communicator::send(const sockaddr_in& addr, const Message& msg) {
     uint8_t* buffer = new uint8_t[BUFFER_SIZE];
     size_t bytes = msg.serialise(buffer);
