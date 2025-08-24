@@ -93,8 +93,8 @@ const std::vector<uint8_t>& ResourceRecord::get_rdata() const {
 std::ostream& operator<< (std::ostream& out, const ResourceRecord& rr) {
     out << rr.name_ << "\t\t";
     out << rr.ttl_ << "\t";
-    out << rr.type_ << "\t";
     out << rr.class_ << "\t";
+    out << rr.type_ << "\t";
     for (uint8_t elem : rr.rdata_) out << (int) elem << "-";
     out << '\n';
 

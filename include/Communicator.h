@@ -13,7 +13,7 @@
 
 #define SERVER_PORT 8080
 #define UDP_PORT 53
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 4096
 
 struct Packet {
     const sockaddr_in addr_;

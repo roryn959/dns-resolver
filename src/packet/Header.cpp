@@ -155,11 +155,11 @@ void Header::set_rcode(RCODE rcode) {
 
 std::ostream& operator<< (std::ostream& out, const Header& header) {
     out << ";; ->>HEADER<<- opcode: " << header.get_opcode();
-    out << ", status: " << header.get_opcode();
+    out << ", status: " << header.get_rcode();
     out << ", id: " << header.get_id();
     out << "\n;; flags: ";
     out << (header.is_response() ? "qr" : "q" );
-    if (header.is_authoritative_answer()) out << ", ar";
+    if (header.is_authoritative_answer()) out << ", aa";
     if (header.is_truncated()) out << ", tc";
     if (header.is_recursion_desired()) out << ", rd";
     if (header.is_recursion_available()) out << ", ra";

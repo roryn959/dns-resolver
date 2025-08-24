@@ -75,7 +75,7 @@ void Communicator::send(const std::string& ip, const Message& msg) {
     dest_addr.sin_family = AF_INET;
     dest_addr.sin_port = htons(UDP_PORT);
 
-    if (inet_pton(AF_INET, "198.41.0.4", &dest_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, ip.c_str(), &dest_addr.sin_addr) <= 0) {
         std::cerr << "Invalid address / address not supported\n";
         return;
     }
